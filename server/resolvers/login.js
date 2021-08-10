@@ -1,36 +1,36 @@
-const {AuthenticationError} = require("apollo-server-errors")
+const { AuthenticationError } = require("apollo-server-errors");
 
-const {User} = require("../models")
+const { User } = require("../models");
+const { signToken } = require("../../utils/auth");
 
-const login = async (_,{input}) => {
-   const {email, password} = input;
-    const user = await User.findOne({email}).populate("savedBooks");
+const login = async (_, { input }) => {
+  const { email, password } = input;
+  const user = await User.findOne({ email });
 
-    if(!user) {
-        throw new AuthenticationError("User not found")
-    }
+  if (!user) {
+    throw new AuthenticationError(
+      "User does not exist! Please check your credentials and try again!"
+    );
+  }
 
-    const validPassword = user.isCorrectPassword(password);
+  const isValidPassword = await user.validatePassword(password);
 
-    if (!validPassword) {
-        throw new AuthenticationError("Invalid Password")
-    }
+  if (!isValidPassword) {
+    throw new AuthenticationError(
+      "Password does not match to this account. Please try again"
+    );
+  }
 
-    const token = signToken({
-        id: user._id,
-        email: user.email,
-        username: user.username, 
-    });
+  const token = signToken({
+    id: user._id,
+    email: user.email,
+    username: user.username,
+  });
 
-    return{
-        token,
-        user,
-    }
+  return {
+    token,
+    user,
+  };
+};
 
-}; 
-
-
-
-
-
-module.exports = login; 
+module.exports = login;

@@ -1,43 +1,37 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // set token secret and expiration date
-const secret = 'mysecretsshhhhh';
-const expiresIn = '2h';
+const secret = process.env.JWT_SECRET || "my local secret";
+const expiresIn = process.env.JWT_EXPIRES_IN || "1h";
 
 const signToken = (payload) => {
-  return jwt.sign(payload, secret, {expiresIn})
-}; 
+  return jwt.sign(payload, secret, { expiresIn });
+};
+
+// if the password is new or modified, we hash it
+const hashPassword = async function (next) {
+  if (this.isNew || this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+};
+
+// we compare the user password with the one in our database to make sure they are the same
+const validatePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+// we check the token for the secret and the age to make sure it is not expired
+const verifyToken = (token) => {
+  return jwt.verify(token, secret, { maxAge: expiresIn });
+};
 
 module.exports = {
-  // function for our authenticated routes
-  authMiddleware: function (req, res, next) {
-    // allows token to be sent via  req.query or headers
-    let token = req.query.token || req.headers.authorization;
-
-    // ["Bearer", "<tokenvalue>"]
-    if (req.headers.authorization) {
-      token = token.split(' ').pop().trim();
-    }
-
-    if (!token) {
-      return res.status(400).json({ message: 'You have no token!' });
-    }
-
-    // verify token and get user data out of it
-    try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration });
-      req.user = data;
-    } catch {
-      console.log('Invalid token');
-      return res.status(400).json({ message: 'invalid token!' });
-    }
-
-    // send to next endpoint
-    next();
-  },
-  signToken: function ({ username, email, _id }) {
-    const payload = { username, email, _id };
-
-    return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
-  },
+  signToken,
+  hashPassword,
+  validatePassword,
+  verifyToken,
 };
+
+

@@ -1,19 +1,19 @@
-const login = require("./login")
-const addUser = require("./addUser")
-const saveBook = require("./saveBook")
-const removeBook = require("./removeBook")
-const getSingleUser = require("./getSingleUser")
+const addUser = require("./addUser");
+const login = require("./login");
+const saveBook = require("./saveBook");
+const removeBook = require("./removeBook");
+const me = require("./user");
 
 const resolvers = {
-    Query: {
-        me: getSingleUser,
-    },
-    Mutation: {
-        login,
-        addUser,
-        saveBook,
-        removeBook,
-    }
-}
+  Query: {
+    me, 
+  },
+  Mutation: {
+    login,
+    addUser,
+    saveBook,
+    removeBook,
+  },
+};
 
-module.exports = resolvers; 
+module.exports = resolvers;

@@ -1,8 +1,9 @@
 const { AuthenticationError } = require("apollo-server-errors");
-const { User } = require("../models/User");
-const { singleToken } = require("../utils/auth");
+const { User } = require("../models");
+const { signToken } = require("../utils/auth");
 
 const addUser = async (_, { input }) => {
+  console.log(User);
   const { username, email, password } = input;
 
   const userAlreadyExists = await User.findOne({ email });

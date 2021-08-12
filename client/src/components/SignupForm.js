@@ -19,7 +19,8 @@ const SignupForm = () => {
 
   const [signup] = useMutation(SIGNUP, {
     onCompleted: (data) => {
-      const { token, user } = data.signup;
+      console.log(data)
+      const { token, user } = data.addUser;
       console.log(user);
       Auth.login(token);
     },

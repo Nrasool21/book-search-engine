@@ -9,7 +9,7 @@ const resolvers = require("./resolvers");
 const context = require("./context");
 
 const routes = require("./routes");
-const { authMiddleware } = require("./utils/auth");
+//const { authMiddleware } = require("./utils/auth");
 const { start } = require("repl");
 
 const PORT = process.env.PORT || 3001;

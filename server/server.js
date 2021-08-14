@@ -1,5 +1,5 @@
 const express = require("express");
-//const {authMiddleware} = require("./utils/auth")
+const {authMiddleware} = require("./utils/auth")
 const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 
@@ -9,8 +9,7 @@ const resolvers = require("./resolvers");
 const context = require("./context");
 
 const routes = require("./routes");
-//const { authMiddleware } = require("./utils/auth");
-const { start } = require("repl");
+//const { start } = require("repl");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -18,8 +17,7 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context,
-  //context: authMiddleware
+  context: authMiddleware
 });
 
 //start graphql server and implement express server as middleware
@@ -55,4 +53,4 @@ db.once("open", () => {
   }
 });
 
-//app.use(routes);
+app.use(routes);

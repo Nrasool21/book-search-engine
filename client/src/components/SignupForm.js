@@ -25,7 +25,7 @@ const SignupForm = () => {
       Auth.login(token);
     },
     onError: (error) => {
-      console.log(error.message);
+      console.log("here",error.message);
       throw new Error("something went wrong!");
     },
   });

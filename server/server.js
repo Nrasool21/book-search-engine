@@ -1,23 +1,23 @@
 const express = require("express");
-const {authMiddleware} = require("./utils/auth")
 const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 
 const db = require("./config/connection");
-const typeDefs = require("./schemas");
-const resolvers = require("./resolvers");
+const typeDefs = require("./schemas/typeDefs");
+const resolvers = require("./resolvers/index");
+const { authMiddleware } = require("./utils/auth");
 const context = require("./context");
 
-const routes = require("./routes");
+//const routes = require("./routes");
 //const { start } = require("repl");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3030;
 const app = express();
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: authMiddleware
+  context,
 });
 
 //start graphql server and implement express server as middleware
@@ -30,7 +30,7 @@ const startServer = async () => {
 startServer();
 
 // express middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // if we're in production, serve client/build as static assets
@@ -53,4 +53,4 @@ db.once("open", () => {
   }
 });
 
-app.use(routes);
+//app.use(routes);

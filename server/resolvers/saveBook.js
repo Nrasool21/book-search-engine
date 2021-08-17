@@ -6,7 +6,7 @@ const saveBook = async (_, { input }, context) => {
   // find the user and update the savedBooks field
   try {
     return await User.findOneAndUpdate(
-      id,
+      { _id: id },
       {
         $push: {
           savedBooks: input,

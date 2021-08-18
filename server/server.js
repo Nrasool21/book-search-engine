@@ -11,7 +11,7 @@ const context = require("./context");
 //const routes = require("./routes");
 //const { start } = require("repl");
 
-const PORT = process.env.PORT || 3030;
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 const server = new ApolloServer({
